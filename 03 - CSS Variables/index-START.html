@@ -22,6 +22,22 @@
 
   <style>
 
+    :root {
+      --spacing: 50px;
+      --blur: 5px;
+      --base: blue;
+    }
+
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      color: var(--base);
+    }
+
     /*
       misc styles, nothing to do with CSS variables
     */
@@ -45,7 +61,76 @@
   </style>
 
   <script>
+
+    function handleChange(e){
+      const suffix = this.dataset.sizing || "";
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+      console.log(suffix);
+    }
+
+    const inpList = document.querySelectorAll('input');
+    inpList.forEach(inp => {inp.addEventListener('change', handleChange);
+    inp.addEventListener('mousemove', handleChange); });
+
   </script>
 
 </body>
 </html>
+
+<!--
+  In CSS, we have variables similar to SASS. To use css variables, you must declare them on the highest level which is :root
+
+  :root can take styling
+   to declare a variable in CSS:  two - are used.
+   --variable name: value;
+
+   example:
+   :root {
+     --spacing: 50px;
+     --blur: 5px;
+     --base: blue;
+   }
+
+   to set a value to a css variable, we use var(--variableName);
+   example:
+   img {
+     padding: var(--spacing);
+     background: var(--base);
+     filter: blur(var(--blur));
+   }
+
+   To select elements, we need to use querySelector. We use querySelectorAll
+   to get all the elements we need, returns a nodeList.
+
+   A nodeList is similar to an array but has far less functionality.
+
+   to get all the input elements:
+   const inpList = document.querySelectorAll('input');
+
+   Then we attach an event listener to each element by looping through with a foreach.
+   the keyword `this` refers to the element the event listener was called on.
+   console.log(this) in the callback function to find out.
+
+   The callback function of the event listener will now do what you want.
+   In our case, we want to update the css variable values to whatever the mouse moves on the inputs.
+
+   First we need the ending suffix for each input, whether it is px or nothing.
+   We can do so by attaching a data attribute or by using the name attribute of the input.
+   example:
+   const suffix = this.dataset.sizing || "";
+
+   the or operator is used if the value is
+   undefined in the instance of colors that don't end in anything.
+   We want our suffix to have something because we will concatenate it later.
+
+   Data attributes can be set by dataset.whateverNameWePut
+   example:
+   <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+   dataset will equal an object {sizing: "px"}
+
+   Now to set the css variable to the value of the given item, we must refer
+   to the style of the document. Then set the propert like so:
+
+   document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+
+ -->
